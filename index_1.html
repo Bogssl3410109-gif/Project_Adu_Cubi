@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Aduana y cubicaje</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#e3edfb;--bg2:#b7d0f3;--ov:rgba(244,246,245,.6);--btn:rgba(255,255,255,.45);--card:#fff;--ink:#0d2144;--mut:#4a6086;--line:#b4c9e8;--acc:#1f56c4;--accink:#fff;--box:#c9a56a;--boxl:#dcbf8c;--boxr:#a78548;--pal:#8a6a3d;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0a1a33;--bg2:#0f2a52;--ov:rgba(14,22,33,.6);--btn:rgba(22,33,47,.45);--card:#112543;--ink:#e6eefb;--mut:#9bb0d1;--line:#26406b;--acc:#5b97ff;--accink:#06122a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0a1a33;--bg2:#0f2a52;--ov:rgba(14,22,33,.6);--btn:rgba(22,33,47,.45);--card:#112543;--ink:#e6eefb;--mut:#9bb0d1;--line:#26406b;--acc:#5b97ff;--accink:#06122a;color-scheme:dark}
+*{box-sizing:border-box}
+html{background:var(--bg2);background:linear-gradient(180deg,var(--bg),var(--bg2)) fixed;min-height:100%}
+body{margin:0;color:var(--ink);font:16px/1.45 Archivo,system-ui,sans-serif;max-width:720px;margin-inline:auto;padding:16px}
+h1{font-size:26px;font-weight:800;margin:4px 0 2px}
+p.sub{color:var(--mut);margin:0 0 14px}
+nav{display:flex;gap:8px;margin-bottom:14px}
+nav button{flex:1;padding:12px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);font:600 15px Archivo,system-ui,sans-serif;border-radius:10px}
+nav button[aria-selected=true]{background:var(--acc);color:var(--accink);border-color:var(--acc)}
+:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+section{display:none}section.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px}
+.g{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+label{display:block;font-size:13px;color:var(--mut)}
+input,select{width:100%;margin-top:3px;padding:10px;font:16px Archivo,system-ui,sans-serif;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px}
+h2{font-size:17px;margin:0 0 10px}
+.res div{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px dashed var(--line)}
+.res div:last-child{border:0;font-weight:800;font-size:18px}
+.res b{font-variant-numeric:tabular-nums}
+.chk label{display:flex;gap:10px;align-items:flex-start;color:var(--ink);font-size:15px;padding:7px 0}
+.chk input{width:22px;height:22px;margin:0;flex:none;accent-color:var(--acc)}
+.bar{height:8px;background:var(--line);border-radius:4px;overflow:hidden;margin:6px 0 10px}
+.bar i{display:block;height:100%;width:0;background:var(--acc);transition:width .2s}
+canvas{width:100%;height:auto;display:block}
+.qty{display:flex;gap:6px;align-items:center;margin-bottom:10px}.qty span{flex:1;font-weight:600}.qty button{min-width:44px;padding:9px 10px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);border-radius:8px;font:700 16px Archivo,system-ui,sans-serif}.qty input{width:70px;margin:0;text-align:center}
+.seg{display:flex;gap:8px;margin-bottom:10px}.seg button{flex:1;padding:9px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);font:600 14px Archivo,system-ui,sans-serif;border-radius:8px}.seg button[aria-pressed=true]{background:var(--acc);color:var(--accink);border-color:var(--acc)}
+small{color:var(--mut)}
+.row{display:flex;justify-content:space-between;width:100%;padding:14px;margin-bottom:8px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);font:600 16px Archivo,system-ui,sans-serif;border-radius:10px}
+.b2{padding:10px 14px;margin:8px 8px 0 0;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);border-radius:8px;font:600 14px Archivo,system-ui,sans-serif}
+.go{width:100%;margin-top:12px;padding:14px;border:0;border-radius:10px;background:var(--acc);color:var(--accink);font:700 16px Archivo,system-ui,sans-serif}
+[hidden]{display:none!important}
+nav button,.row,.b2,.seg button,.qty button{background:var(--btn);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.paper{background:#fff;color:#111;border:2px solid #111;padding:12px;font:13px/1.35 Archivo,system-ui,sans-serif;margin-bottom:8px}
+.paper small{display:block;font-size:10px;font-weight:700;text-transform:uppercase;color:#444}
+.pt{display:flex;justify-content:space-between;align-items:center;gap:8px;background:#111;color:#fff;padding:8px 10px;margin-bottom:10px}.pt b{font-size:15px;letter-spacing:.04em}.pt span{font-size:11px;text-align:right}
+.pc{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid #111;border-left:1px solid #111;margin-bottom:8px}.pc div{border-right:1px solid #111;border-bottom:1px solid #111;padding:4px 6px;min-height:44px;overflow-wrap:anywhere}
+.pf{text-align:right;font-weight:700;margin-bottom:8px}.pn{font-weight:700;font-size:12px;margin:8px 0 4px}.ptot{border:1px solid #111;padding:6px 8px;font-weight:700;margin-top:8px}
+.psg{display:flex;justify-content:space-between;margin-top:34px}.psg span{border-top:1px solid #111;width:46%;padding-top:3px;font-size:11px}.pnt{font-size:10px;color:#555;margin:10px 0 0}
+@media print{body::before{display:none}body *{visibility:hidden}#dc,#dc *{visibility:visible}#dc{position:absolute;left:0;top:0;width:100%;border:0}#dc button{display:none}}
+.ib{display:grid;grid-template-columns:1fr 1fr;gap:8px}.ib .row{margin:0;text-align:left;justify-content:flex-start;font-size:14px;padding:12px 10px}
+.row[aria-pressed=true]{background:var(--acc);color:var(--accink);border-color:var(--acc)}
+#ip{font-size:14px}#ip p{margin:8px 0}#ip ol,#ip ul{margin:8px 0;padding-left:20px}#ip li{margin-bottom:4px}
+@media (prefers-reduced-motion:reduce){.bar i{transition:none}}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
+</head>
+<body>
+<h1>Aduana y cubicaje</h1>
+<p class="sub">Prototipo: calcula tu operación y visualiza la carga en tarima.</p>
+<nav role="tablist">
+<button role="tab" aria-selected="true" data-t="a">Aduana</button>
+<button role="tab" aria-selected="false" data-t="c">Cajas y tarimas</button>
+<button role="tab" aria-selected="false" data-t="r">Reporte</button>
+</nav>
+
+<section id="a" class="on">
+<div class="card g">
+<label>Operación<select id="op"><option value="imp">Importación</option><option value="exp">Exportación</option></select></label>
+<label>Transporte<select id="tr"><option>Marítimo</option><option>Aéreo</option><option>Terrestre</option><option>Ferroviario</option></select></label>
+<label>Incoterm<select id="inc"><option>EXW</option><option>FCA</option><option>FOB</option><option>CFR</option><option>CIF</option><option>CPT</option><option>CIP</option><option>DAP</option><option>DDP</option></select></label>
+<label>Tipo de cambio (MXN/USD)<input id="tc" type="number" inputmode="decimal" value="18.50"></label>
+<label>Valor factura (USD)<input id="vf" type="number" inputmode="decimal" value="10000"></label>
+<label>Fracción arancelaria<input id="fr" type="text" placeholder="8542.31.01"></label>
+<label>Flete (USD)<input id="fl" type="number" inputmode="decimal" value="800"></label>
+<label>Seguro (USD)<input id="sg" type="number" inputmode="decimal" value="50"></label>
+<label>IGI (%)<input id="igi" type="number" inputmode="decimal" value="5"></label>
+</div>
+<div class="card" id="info"></div>
+<div class="card res" id="imp-res">
+<h2>Estimación de contribuciones</h2>
+<div><span>Valor en aduana</span><b id="r1"></b></div>
+<div><span>DTA (8 al millar)</span><b id="r2"></b></div>
+<div><span>IGI</span><b id="r3"></b></div>
+<div><span>IVA 16%</span><b id="r4"></b></div>
+<div><span>Total a pagar</span><b id="r5"></b></div>
+<small>Estimación de referencia. El agente aduanal confirma el cálculo final.</small>
+</div>
+<div class="card g"><h2 style="grid-column:1/-1;margin:0">Honorarios y gastos</h2>
+<label>Cobro del agente<select id="hm"><option value="fijo">Monto fijo (MXN)</option><option value="pct">% del valor en aduana</option></select></label>
+<label>Monto o porcentaje<input id="hv" type="number" inputmode="decimal" step="any" value="0"></label>
+<label>Honorario mínimo (MXN, si es %)<input id="hmin" type="number" inputmode="decimal" step="any" value="0"></label>
+<label>Gastos de terceros (MXN)<input id="gt" type="number" inputmode="decimal" step="any" value="0"></label></div>
+<div class="card res"><h2>Costo total de la operación</h2>
+<div><span>Contribuciones</span><b id="c0"></b></div><div><span>Honorarios del agente<small style="display:block;font-size:12px;font-weight:400">Lo que cobra el agente por su servicio. Se pacta libremente con él y se factura aparte de los impuestos y los gastos.</small></span><b id="c1"></b></div><div><span>IVA sobre honorarios (16%)<small style="display:block;font-size:12px;font-weight:400">Impuesto que se suma a los honorarios del agente. Confirma con él que su cotización lo maneje así.</small></span><b id="c2"></b></div><div><span>Gastos de terceros<small style="display:block;font-size:12px;font-weight:400">Pagos que el agente hace por ti a otros, como maniobras, almacenaje, inspección o flete local. No son ganancia del agente.</small></span><b id="c3"></b></div><div><span>Costo total puesto en bodega</span><b id="c4"></b></div></div>
+<button class="go" id="rg">Registrar operación en el reporte</button><p id="rgm" role="status"></p>
+<div class="card" id="fmenu"></div>
+<div class="card" id="fm" hidden></div>
+<div class="card" id="dc" hidden></div>
+</section>
+
+<section id="c">
+<div class="card g">
+<label style="grid-column:1/-1">Unidad de medida de la caja<select id="lu"><option value="1" data-s="cm">Centímetros (cm)</option><option value="0.1" data-s="mm">Milímetros (mm)</option><option value="100" data-s="m">Metros (m)</option></select></label>
+<label><span data-t="Caja largo">Caja largo (cm)</span><input id="bl" step="any" type="number" inputmode="decimal" value="40"></label>
+<label><span data-t="Caja ancho">Caja ancho (cm)</span><input id="bw" step="any" type="number" inputmode="decimal" value="30"></label>
+<label><span data-t="Caja alto">Caja alto (cm)</span><input id="bh" step="any" type="number" inputmode="decimal" value="25"></label>
+<label>Tarima<select id="pt"><option value="120x100">120 × 100 cm</option><option value="120x80">120 × 80 cm</option><option value="100x100">100 × 100 cm</option></select></label>
+<label>Altura máxima con tarima (cm)<input id="ph" type="number" inputmode="decimal" value="150"></label>
+</div>
+<div class="card"><div class="qty"><span>Cajas en la tarima</span><button type="button" onclick="qAdj(-1)" aria-label="Quitar una caja">−</button><input id="qn" type="number" inputmode="numeric" min="0" placeholder="Máx."><button type="button" onclick="qAdj(1)" aria-label="Agregar una caja">+</button><button type="button" onclick="qMax()">Máx.</button></div><div class="seg"><button data-v="3d" aria-pressed="true" onclick="setVista('3d')">Vista 3D</button><button data-v="2d" aria-pressed="false" onclick="setVista('2d')">Vista 2D</button><button data-v="pal" aria-pressed="false" onclick="setVista('pal')">Con tarima</button></div><canvas id="cv" width="680" height="520" aria-label="Vista isométrica de una caja"></canvas></div>
+<div class="card g">
+<h2 style="grid-column:1/-1;margin:0">Tarima: costo y peso</h2>
+<label>Costo por tarima<input id="pc" type="number" inputmode="decimal" value="250"></label>
+<label>Moneda<select id="pm"><option>MXN</option><option>USD</option></select></label>
+<label>Peso por caja<input id="bk" type="number" inputmode="decimal" value="12"></label>
+<label>Peso de la tarima vacía<input id="pw" type="number" inputmode="decimal" value="25"></label>
+<label style="grid-column:1/-1">Unidad en la que capturas el peso<select id="pu"><option value="1">Kilogramos (kg)</option><option value="0.001">Gramos (g)</option><option value="0.45359237">Libras (lb)</option><option value="0.028349523">Onzas (oz)</option><option value="1000">Toneladas (t)</option></select></label>
+</div>
+<div class="card res">
+<h2>Resultado</h2>
+<div><span>Volumen por caja</span><b id="s9"></b></div>
+<div><span>Cajas por capa</span><b id="s1"></b></div>
+<div><span>Capas</span><b id="s2"></b></div>
+<div><span>Cajas por tarima</span><b id="s3"></b></div>
+<div><span>Peso por tarima en kilogramos</span><b id="s4"></b></div>
+<div><span>En libras</span><b id="w2"></b></div>
+<div><span>En gramos</span><b id="w3"></b></div>
+<div><span>En onzas</span><b id="w4"></b></div>
+<div><span>En toneladas</span><b id="w5"></b></div>
+<div><span>Costo de tarima por caja</span><b id="s8"></b></div>
+<div><span>Tarimas en contenedor 20’</span><b id="s5"></b></div>
+<div><span>Tarimas en contenedor 40’</span><b id="s6"></b></div>
+<div><span>Tarimas en contenedor 40’ HC</span><b id="s7"></b></div>
+<small>Cálculo en una sola capa de tarimas, sin apilar tarimas entre sí.</small>
+</div>
+</section>
+
+<section id="r">
+<div class="card g"><h2 style="grid-column:1/-1;margin:0">Filtros</h2><label>Fecha desde<input id="f1" type="date"></label><label>Fecha hasta<input id="f2" type="date"></label><label>Incoterm<select id="fi"><option value="">Todos</option><option>EXW</option><option>FCA</option><option>FOB</option><option>CFR</option><option>CIF</option><option>CPT</option><option>CIP</option><option>DAP</option><option>DDP</option></select></label><label>Transporte<select id="ft"><option value="">Todos</option><option>Marítimo</option><option>Aéreo</option><option>Terrestre</option><option>Ferroviario</option></select></label></div>
+<div class="card res" id="rsum"></div>
+<div class="card"><canvas id="rc" width="680" height="380" aria-label="Gráfica de gastos por día"></canvas></div>
+<div id="rl"></div>
+<button class="go" id="xl">Exportar a hoja de cálculo (.xlsx)</button><p id="xm" role="status"></p>
+</section>
+<script>
+const $=id=>document.getElementById(id), n=id=>parseFloat($(id).value)||0;
+const fmt=(v,c)=>(c?'$':'')+v.toLocaleString('es-MX',{minimumFractionDigits:2,maximumFractionDigits:2});
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('nav button').forEach(x=>x.setAttribute('aria-selected',x===b));
+  document.querySelectorAll('section').forEach(s=>s.classList.toggle('on',s.id===b.dataset.t));
+  if(b.dataset.t==='c')cub();if(b.dataset.t==='r')rep();
+});
+
+/* ---- Aduana ---- */
+function adu(){
+  const op=$('op').value,inc=$('inc').value;
+  $('imp-res').style.display=op==='imp'?'block':'none';
+  let v=n('vf'),f=n('fl'),s=n('sg');
+  if(['EXW','FCA','FOB'].includes(inc))v+=f+s; else if(['CFR','CPT'].includes(inc))v+=s;
+  const va=v*n('tc'),dta=va*0.008,igi=va*n('igi')/100,iva=(va+dta+igi)*0.16;
+  $('r1').textContent=fmt(va,1);$('r2').textContent=fmt(dta,1);$('r3').textContent=fmt(igi,1);$('r4').textContent=fmt(iva,1);$('r5').textContent=fmt(dta+igi+iva,1);window.CALC={va,dta,igi,iva,ex:op==='exp'};costo();
+}
+['op','tr','inc','tc','vf','fr','fl','sg','igi','hm','hv','hmin','gt'].forEach(i=>$(i).addEventListener('input',adu));
+
+/* ---- Cubicaje ---- */
+function best(L,W,a,b){
+  const o1=Math.floor(L/a)*Math.floor(W/b),o2=Math.floor(L/b)*Math.floor(W/a);
+  return o1>=o2?{n:o1,x:Math.floor(L/a),y:Math.floor(W/b),a,b}:{n:o2,x:Math.floor(L/b),y:Math.floor(W/a),a:b,b:a};
+}
+function cont(pl,pw,H,CL,CW,CH){
+  if(H>CH)return 0;
+  return Math.max(Math.floor(CL/pl)*Math.floor(CW/pw),Math.floor(CL/pw)*Math.floor(CW/pl));
+}
+function cub(){
+  const [PL,PW]=$('pt').value.split('x').map(Number),PH=15;
+  const lf=parseFloat($('lu').value)||1;UNIT.f=lf;UNIT.s=$('lu').selectedOptions[0].dataset.s;const bl=n('bl')*lf,bw=n('bw')*lf,bh=n('bh')*lf,kg=n('bk')*uf(),maxH=n('ph');
+  if(!bl||!bw||!bh)return;
+  const g=best(PL,PW,bl,bw),layers=Math.max(0,Math.floor((maxH-PH)/bh)),mx=g.n*layers,qn=Math.floor(n('qn')),tot=qn>0?Math.min(qn,mx):mx,used=g.n?Math.ceil(tot/g.n):0;
+  $('s1').textContent=g.n;$('s2').textContent=used;$('s3').textContent=tot+(tot<mx?' (máx. '+mx+')':'');
+  const kT=tot*kg+n('pw')*uf(),f3=v=>v.toLocaleString('es-MX',{maximumFractionDigits:3});
+  $('s4').textContent=f3(kT)+' kg';$('w2').textContent=f3(kT/0.45359237)+' lb';$('w3').textContent=f3(kT*1000)+' g';$('w4').textContent=f3(kT/0.028349523)+' oz';$('w5').textContent=f3(kT/1000)+' t';
+  $('s8').textContent=tot?fmt(n('pc')/tot,1)+' '+$('pm').value:'—';
+  $('s9').textContent=f3(bl*bw*bh/1e6)+' m³ ('+f3(bl*bw*bh/1000)+' L)';
+  const H=PH+used*bh;
+  $('s5').textContent=cont(PL,PW,H,589,235,239);
+  $('s6').textContent=cont(PL,PW,H,1203,235,239);
+  $('s7').textContent=cont(PL,PW,H,1203,235,269);
+  window.LAST={mx,tot,kT,net:tot*kg,bl,bw,bh,PL,PW,H:PH+used*bh};
+  drawBox(bl,bw,bh,{PL,PW,PH,g,used,tot,kT});
+}
+const UNIT={f:1,s:'cm'};
+const U=v=>(Math.round(v/UNIT.f*100)/100)+' '+UNIT.s;
+const uf=()=>parseFloat($('pu').value)||1;
+let vista='3d';
+function setVista(v){vista=v;document.querySelectorAll('.seg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===v));cub()}
+function drawBox(l,w,h,pl){
+  const c=$('cv'),x=c.getContext('2d'),ink=getComputedStyle(document.documentElement).getPropertyValue('--ink').trim();
+  x.clearRect(0,0,c.width,c.height);
+  const TOP='#e8e0cd',LEFT='#af8b55',RIGHT='#cfb794',TAPE='#f6f1e5',TAPE2='#e8dcc6',AR='#5b6068';
+  const poly=(q,f)=>{x.beginPath();q.forEach((p,i)=>i?x.lineTo(p[0],p[1]):x.moveTo(p[0],p[1]));x.closePath();x.fillStyle=f;x.fill()};
+  const head=(t,f)=>{const a=Math.atan2(t[1]-f[1],t[0]-f[0]);x.beginPath();x.moveTo(t[0],t[1]);x.lineTo(t[0]-16*Math.cos(a-0.4),t[1]-16*Math.sin(a-0.4));x.lineTo(t[0]-16*Math.cos(a+0.4),t[1]-16*Math.sin(a+0.4));x.closePath();x.fillStyle=AR;x.fill()};
+  const arrow=(p,q)=>{x.strokeStyle=AR;x.lineWidth=3;x.beginPath();x.moveTo(p[0],p[1]);x.lineTo(q[0],q[1]);x.stroke();head(p,q);head(q,p)};
+  const label=(t,p,rot,al)=>{x.save();x.translate(p[0],p[1]);x.rotate(rot);x.fillStyle=ink;x.font='700 24px Archivo,system-ui,sans-serif';x.textAlign=al||'center';x.textBaseline='middle';x.fillText(t,0,0);x.restore()};
+  if(vista==='3d'){
+    const P=(X,Y,Z)=>[(X-Y)*0.866,(X+Y)*0.5-Z];
+    const ps=[P(0,0,0),P(l,0,0),P(0,w,0),P(l,w,0),P(0,0,h),P(l,0,h),P(0,w,h),P(l,w,h)];
+    const a=Math.min(...ps.map(p=>p[0])),b=Math.max(...ps.map(p=>p[0])),d=Math.min(...ps.map(p=>p[1])),e=Math.max(...ps.map(p=>p[1]));
+    const ML=190,MR=150,MT=40,MB=130,aw=c.width-ML-MR,ah=c.height-MT-MB;
+    const sc=Math.min(aw/(b-a),ah/(e-d)),ox=ML-a*sc+(aw-(b-a)*sc)/2,oy=MT-d*sc+(ah-(e-d)*sc)/2;
+    const T=(X,Y,Z)=>{const p=P(X,Y,Z);return[p[0]*sc+ox,p[1]*sc+oy]};
+    const y1=w*0.42,y2=w*0.58;
+    poly([T(0,0,h),T(l,0,h),T(l,w,h),T(0,w,h)],TOP);
+    poly([T(0,w,0),T(l,w,0),T(l,w,h),T(0,w,h)],LEFT);
+    poly([T(l,0,0),T(l,w,0),T(l,w,h),T(l,0,h)],RIGHT);
+    poly([T(0,y1,h),T(l,y1,h),T(l,y2,h),T(0,y2,h)],TAPE);
+    poly([T(l,y1,h),T(l,y2,h),T(l,y2,h*0.85),T(l,y1,h*0.85)],TAPE2);
+    poly([T(l,y1,0),T(l,y2,0),T(l,y2,h*0.15),T(l,y1,h*0.15)],TAPE2);
+    const seg=(p,q,o)=>{const dx=q[0]-p[0],dy=q[1]-p[1],n=Math.hypot(dx,dy),ux=-dy/n,uy=dx/n;return{p:[p[0]+ux*o,p[1]+uy*o],q:[q[0]+ux*o,q[1]+uy*o],ang:Math.atan2(dy,dx),m:[(p[0]+q[0])/2+ux*(o+30),(p[1]+q[1])/2+uy*(o+30)]}};
+    let s=seg(T(0,w,h),T(0,w,0),40);arrow(s.p,s.q);label('alto '+U(h),[s.m[0]+16,s.m[1]],0,'right');
+    s=seg(T(0,w,0),T(l,w,0),40);arrow(s.p,s.q);label('largo '+U(l),s.m,s.ang);
+    s=seg(T(l,w,0),T(l,0,0),40);arrow(s.p,s.q);label('ancho '+U(w),s.m,s.ang);
+  }else if(vista==='pal'){
+    const {PL,PW,PH,g,used,tot,kT}=pl,PC=n('pc'),CUR=$('pm').value,H=PH+used*h,rs=getComputedStyle(document.documentElement);
+    const P=(X,Y,Z)=>[(X-Y)*0.866,(X+Y)*0.5-Z];
+    const ps=[P(0,0,0),P(PL,0,0),P(0,PW,0),P(PL,PW,0),P(0,0,H),P(PL,0,H),P(0,PW,H),P(PL,PW,H)];
+    const a=Math.min(...ps.map(p=>p[0])),b=Math.max(...ps.map(p=>p[0])),d=Math.min(...ps.map(p=>p[1])),e=Math.max(...ps.map(p=>p[1]));
+    const M=30,MB=170,aw=c.width-2*M,ah=c.height-M-MB;
+    const sc=Math.min(aw/(b-a),ah/(e-d)),ox=M-a*sc+(aw-(b-a)*sc)/2,oy=M-d*sc+(ah-(e-d)*sc)/2;
+    const T=(X,Y,Z)=>{const p=P(X,Y,Z);return[p[0]*sc+ox,p[1]*sc+oy]};
+    const face=(q,f)=>{poly(q.map(v=>T(v[0],v[1],v[2])),f);x.strokeStyle='rgba(0,0,0,.35)';x.lineWidth=1;x.stroke()};
+    const solid=(X,Y,Z,A,B,C,t,lf,r)=>{face([[X,Y,Z+C],[X+A,Y,Z+C],[X+A,Y+B,Z+C],[X,Y+B,Z+C]],t);face([[X,Y+B,Z],[X+A,Y+B,Z],[X+A,Y+B,Z+C],[X,Y+B,Z+C]],lf);face([[X+A,Y,Z],[X+A,Y+B,Z],[X+A,Y+B,Z+C],[X+A,Y,Z+C]],r)};
+    solid(0,0,0,PL,PW,PH,'#c5a46d','#a8844f','#8a6a3d');
+    const bx=(PL-g.x*g.a)/2,by=(PW-g.y*g.b)/2;
+    const cells=[];for(let i=0;i<g.x;i++)for(let j=0;j<g.y;j++)cells.push([i,j]);
+    const grow=cells.sort((p,q)=>Math.max(...p)-Math.max(...q)||p[0]-q[0]||p[1]-q[1]);
+    let left=tot;
+    for(let z=0;z<used;z++){const sel=grow.slice(0,Math.min(g.n,left));left-=sel.length;sel.slice().sort((p,q)=>(p[0]+p[1])-(q[0]+q[1])||p[0]-q[0]).forEach(([i,j])=>solid(bx+i*g.a,by+j*g.b,PH+z*h,g.a,g.b,h,TOP,LEFT,RIGHT))}
+    const pt=T(PL/2,PW,PH/2),cx=c.width/2,cy=M+ah+18;
+    x.strokeStyle=AR;x.lineWidth=2;x.beginPath();x.moveTo(pt[0],pt[1]);x.lineTo(cx,cy);x.stroke();
+    x.beginPath();x.arc(pt[0],pt[1],5,0,7);x.fillStyle=AR;x.fill();
+    const tag='Tarima: '+fmt(PC,1)+' '+CUR;
+    x.font='700 26px Archivo,system-ui,sans-serif';const tw=x.measureText(tag).width+40;
+    x.fillStyle=rs.getPropertyValue('--acc').trim();x.beginPath();x.roundRect?x.roundRect(cx-tw/2,cy,tw,44,10):x.rect(cx-tw/2,cy,tw,44);x.fill();
+    x.fillStyle=rs.getPropertyValue('--accink').trim();x.textAlign='center';x.textBaseline='middle';x.fillText(tag,cx,cy+23);
+    const f2=v=>v.toLocaleString('es-MX',{maximumFractionDigits:2});
+    x.fillStyle=ink;x.font='600 22px Archivo,system-ui,sans-serif';
+    x.fillText('Medidas '+PL+' × '+PW+' cm · alto total '+H+' cm',cx,cy+70);
+    x.fillText(tot+' cajas de '+U(l)+' × '+U(w)+' × '+U(h)+' ('+g.n+' por capa máx. · '+used+(used===1?' capa':' capas')+')',cx,cy+98);
+    x.fillText('Peso total '+f2(kT)+' kg'+(tot?' · '+fmt(PC/tot,1)+' '+CUR+' de tarima por caja':''),cx,cy+126);
+  }else{
+    const sc=Math.min(440/l,350/(h+w)),x0=Math.max(150,(c.width-l*sc)/2+40),y0=30,y1=y0+h*sc+75;
+    x.strokeStyle='rgba(0,0,0,.35)';x.lineWidth=2;
+    poly([[x0,y0],[x0+l*sc,y0],[x0+l*sc,y0+h*sc],[x0,y0+h*sc]],LEFT);x.strokeRect(x0,y0,l*sc,h*sc);
+    poly([[x0,y1],[x0+l*sc,y1],[x0+l*sc,y1+w*sc],[x0,y1+w*sc]],TOP);
+    poly([[x0,y1+w*sc*0.42],[x0+l*sc,y1+w*sc*0.42],[x0+l*sc,y1+w*sc*0.58],[x0,y1+w*sc*0.58]],TAPE);
+    x.strokeRect(x0,y1,l*sc,w*sc);
+    arrow([x0,y0+h*sc+26],[x0+l*sc,y0+h*sc+26]);label('largo '+U(l),[x0+l*sc/2,y0+h*sc+52],0);
+    arrow([x0-34,y0],[x0-34,y0+h*sc]);label('alto '+U(h),[x0-48,y0+h*sc/2],0,'right');
+    arrow([x0,y1+w*sc+26],[x0+l*sc,y1+w*sc+26]);label('largo '+U(l),[x0+l*sc/2,y1+w*sc+52],0);
+    arrow([x0-34,y1],[x0-34,y1+w*sc]);label('ancho '+U(w),[x0-48,y1+w*sc/2],0,'right');
+  }
+}
+['bl','bw','bh','bk','pt','ph','pc','pm','pw','pu','qn'].forEach(i=>$(i).addEventListener('input',cub));
+
+const ORD=['ce','fc','pl','dt','co','pd'];
+const FORMS={
+ ce:{t:'Carta de encargo',head:[['Importador / razón social','im'],['RFC','rf'],['Domicilio fiscal','dm'],['Agente aduanal o agencia','ag'],['Patente o autorización','pt'],['Aduana de despacho','ad'],['Tipo de operación','op'],['Descripción de la mercancía','de'],['Fecha','fe','date'],['Vigencia','vg']],cols:[]},
+ fc:{t:'Factura comercial',head:[['Vendedor','ex'],['Comprador','im'],['No. de factura','nf'],['Fecha','fe','date'],['País de origen','po'],['Incoterm','it'],['Moneda','mo'],['Condiciones de pago','cp']],cols:[['Descripción','d'],['Fracción arancelaria','fr'],['Cantidad','q','number'],['Precio unitario','pu','number']]},
+ pl:{t:'Packing list',head:[['Exportador / proveedor','ex'],['Importador / consignatario','im'],['No. de factura','nf'],['Fecha','fe','date'],['País de origen','po'],['Incoterm','it']],cols:[['Descripción','d'],['Bultos','b','number'],['Cantidad','q','number'],['Peso neto (kg)','pn','number'],['Peso bruto (kg)','pb','number'],['Dimensiones (cm)','dm']]},
+ dt:{t:'Documento de transporte',head:[['Tipo (BL, guía aérea, carta porte)','ty'],['Número de documento','nd'],['Transportista','tp'],['Origen (puerto, aeropuerto o ciudad)','og'],['Destino','ds'],['Buque, vuelo o unidad','bq'],['Fecha de embarque','fe','date'],['Consignatario','im'],['Bultos','bu','number'],['Peso bruto (kg)','pb','number'],['Volumen (m³)','vo','number']],cols:[]},
+ co:{t:'Certificado de origen',head:[['Exportador','ex'],['Productor','pr'],['Importador','im'],['País de origen','po'],['Tratado (T-MEC, otro)','tr'],['Fecha','fe','date']],cols:[['Descripción','d'],['Fracción arancelaria','fr'],['Criterio de origen (A, B, C, D)','cr'],['Cantidad','q','number'],['Peso (kg)','pn','number']]},
+ pd:{t:'Datos para el pedimento',head:[['Importador o exportador','im'],['RFC','rf'],['Clave de pedimento (A1, etc.)','cl'],['Régimen','rg'],['Aduana de despacho','ad'],['Medio de transporte','mt'],['Incoterm','it'],['Fracción arancelaria','fr'],['Valor factura (USD)','vf','number'],['Tipo de cambio','tc','number'],['Bultos','bu','number'],['Peso bruto (kg)','pb','number']],cols:[]}
+};
+const S={};ORD.forEach(k=>S[k]={h:{},r:[{}],saved:false});let cur=null;
+function menu(){
+  const m=$('fmenu');m.innerHTML='<h2>Formatos para llenar</h2>';
+  ORD.forEach(k=>{const b=document.createElement('button');b.className='row';b.innerHTML='<span>'+FORMS[k].t+(S[k].saved?' ✓':'')+'</span><span>→</span>';b.onclick=()=>openF(k);m.appendChild(b)});
+}
+function openF(k){
+  cur=k;const F=FORMS[k],st=S[k],fm=$('fm'),rw=F.cols.length>0;fm.hidden=false;
+  fm.innerHTML='<h2>'+F.t+'</h2><small>Folio: <b>'+(st.folio||nextF(k)+' (se asigna al guardar)')+'</b></small><div class="g" id="hd" style="margin-top:8px"></div>'+(rw?'<h2 style="margin-top:14px">Partidas</h2><div id="rows"></div><button class="b2" id="addr">Agregar partida +</button><div class="res" id="tot"></div>':'')+'<button class="b2" id="pre">Traer datos de la operación</button><button class="go" id="go">Guardar y generar documento →</button><button class="b2" id="cls">Cerrar</button>';
+  const hd=$('hd');
+  F.head.forEach(f=>{const l=document.createElement('label');l.textContent=f[0];const i=document.createElement('input');i.type=f[2]||'text';if(f[2]==='number')i.inputMode='decimal';i.value=st.h[f[1]]||'';i.oninput=()=>{st.h[f[1]]=i.value;if(f[1]==='mo')sum()};l.appendChild(i);hd.appendChild(l)});
+  if(rw)$('addr').onclick=()=>{st.r.push({});rows()};
+  $('pre').onclick=()=>{pre(k);openF(k)};
+  $('cls').onclick=()=>{fm.hidden=true};
+  $('go').onclick=()=>{st.saved=true;assign(k);menu();fm.hidden=true;docView(k)};
+  if(rw)rows();
+  fm.scrollIntoView();
+}
+function rows(){
+  const F=FORMS[cur],st=S[cur],box=$('rows');box.innerHTML='';
+  st.r.forEach((r,i)=>{
+    const d=document.createElement('div');d.className='card g';
+    F.cols.forEach(c=>{const l=document.createElement('label');l.textContent=c[0];const inp=document.createElement('input');inp.type=c[2]||'text';if(c[2])inp.inputMode='decimal';inp.value=r[c[1]]||'';inp.oninput=()=>{r[c[1]]=inp.value;sum()};l.appendChild(inp);d.appendChild(l)});
+    const q=document.createElement('button');q.className='b2';q.style.gridColumn='1/-1';q.textContent='Quitar partida';q.onclick=()=>{st.r.splice(i,1);if(!st.r.length)st.r.push({});rows()};d.appendChild(q);box.appendChild(d)});
+  sum();
+}
+function sum(){
+  const st=S[cur],t=$('tot');if(!t)return;const v=k=>st.r.reduce((a,r)=>a+(parseFloat(r[k])||0),0);
+  t.innerHTML=cur==='pl'
+   ?'<div><span>Total de bultos</span><b>'+v('b')+'</b></div><div><span>Peso neto</span><b>'+v('pn')+' kg</b></div><div><span>Peso bruto</span><b>'+v('pb')+' kg</b></div>'
+   :cur==='fc'?'<div><span>Total de la factura</span><b>'+fmt(st.r.reduce((a,r)=>a+(parseFloat(r.q)||0)*(parseFloat(r.pu)||0),0),1)+' '+(st.h.mo||'')+'</b></div>'
+   :'<div><span>Cantidad total</span><b>'+v('q')+'</b></div>';
+}
+const TT={ce:['CARTA DE ENCARGO','Carta de encargo al agente aduanal'],fc:['COMMERCIAL INVOICE','Factura comercial'],pl:['PACKING LIST','Lista de empaque'],dt:['TRANSPORT DOCUMENT','Documento de transporte (BL, guía aérea o carta porte)'],co:['CERTIFICATE OF ORIGIN','Certificado de origen'],pd:['HOJA DE DATOS DEL PEDIMENTO','Datos para el pedimento']};
+const esc=v=>String(v==null?'':v).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const cells=(list,vals)=>list.map(f=>'<div'+(f[1]==='d'?' style="grid-column:1/-1"':'')+'><small>'+esc(f[0])+'</small>'+esc(vals[f[1]])+'</div>').join('');
+function docView(k){
+  const F=FORMS[k],st=S[k],dc=$('dc'),nx=ORD[ORD.indexOf(k)+1];
+  let h='<div class="paper"><div class="pt"><b>'+TT[k][0]+'</b><span>'+TT[k][1]+'</span></div><div class="pf">FOLIO <b>'+esc(st.folio)+'</b></div><div class="pc">'+cells(F.head,st.h)+'</div>';
+  if(F.cols.length){
+    st.r.forEach((r,i)=>{h+='<div class="pn">Partida '+String(i+1).padStart(2,'0')+' · '+esc(st.folio)+'-'+String(i+1).padStart(2,'0')+'</div><div class="pc">'+cells(F.cols,r)+'</div>'});
+    const v=c=>st.r.reduce((a,r)=>a+(parseFloat(r[c])||0),0);
+    h+='<div class="ptot">'+(k==='pl'?'Total de bultos: '+v('b')+' · Peso neto: '+v('pn')+' kg · Peso bruto: '+v('pb')+' kg':k==='fc'?'Total: '+fmt(st.r.reduce((a,r)=>a+(parseFloat(r.q)||0)*(parseFloat(r.pu)||0),0),1)+' '+esc(st.h.mo||''):'Cantidad total: '+v('q'))+'</div>';
+  }
+  h+='<div class="psg"><span>Nombre y firma</span><span>Fecha</span></div><p class="pnt">Documento generado en el prototipo. Sin validez oficial.</p></div>'+(nx?'<button class="b2" id="dn">Siguiente formato →</button>':'')+'<button class="b2" id="dp">Imprimir / PDF</button><button class="b2" id="de">Editar</button><button class="b2" id="dw">Nuevo documento</button><button class="b2" id="dx">Cerrar</button>';
+  dc.hidden=false;dc.innerHTML=h;
+  if(nx)$('dn').onclick=()=>{dc.hidden=true;openF(nx)};
+  $('dp').onclick=()=>window.print();
+  $('dw').onclick=()=>{S[k]={h:{},r:[{}],saved:false};menu();dc.hidden=true;openF(k)};
+  $('de').onclick=()=>{dc.hidden=true;openF(k)};
+  $('dx').onclick=()=>{dc.hidden=true};
+  dc.scrollIntoView();
+}
+const PFX={ce:'CE',fc:'FC',pl:'PL',dt:'DT',co:'CO',pd:'PD'};let MEM={};
+function getC(){try{return JSON.parse(localStorage.getItem('folios_v1'))||MEM}catch(e){return MEM}}
+function setC(c){MEM=c;try{localStorage.setItem('folios_v1',JSON.stringify(c))}catch(e){}}
+const fmtF=(k,v)=>PFX[k]+'-'+String(v).padStart(4,'0');
+const nextF=k=>fmtF(k,(getC()[k]||0)+1);
+function assign(k){const st=S[k];if(!st.folio){const c=getC();c[k]=(c[k]||0)+1;setC(c);st.folio=fmtF(k,c[k])}return st.folio}
+function pre(k){
+  const st=S[k],L=window.LAST||{},h=st.h,r3=v=>Math.round(v*1000)/1000,inc=$('inc').value,fr=$('fr').value;
+  const set=o=>Object.keys(o).forEach(x=>{if(o[x]!==''&&o[x]!==undefined)h[x]=o[x]});
+  const add=row=>{const empty=st.r.length===1&&!Object.values(st.r[0]).some(Boolean);if(empty)st.r=[row];else st.r.push(row)};
+  if(k==='pl'){set({it:inc});if(L.tot)add({d:'Cajas de '+L.bl+'x'+L.bw+'x'+L.bh+' cm',b:1,q:L.tot,pn:r3(L.net),pb:r3(L.kT),dm:L.PL+'x'+L.PW+'x'+L.H})}
+  else if(k==='fc'){set({it:inc,mo:'USD'});add({d:'',fr:fr,q:1,pu:n('vf')})}
+  else if(k==='co'){add({d:'',fr:fr,q:L.tot||'',pn:L.net?r3(L.net):''})}
+  else if(k==='dt'){set({bu:L.tot?1:'',pb:L.kT?r3(L.kT):'',vo:L.tot?r3(L.bl*L.bw*L.bh*L.tot/1e6):''})}
+  else if(k==='pd'){set({it:inc,fr:fr,vf:$('vf').value,tc:$('tc').value,mt:$('tr').value,bu:L.tot?1:'',pb:L.kT?r3(L.kT):''})}
+  else if(k==='ce'){set({op:$('op').value==='imp'?'Importación':'Exportación'})}
+}
+function qAdj(d){const L=window.LAST||{mx:0,tot:0};const v=Math.max(1,Math.min(L.mx,(Math.floor(n('qn'))||L.tot)+d));$('qn').value=v;setVista('pal')}
+function qMax(){$('qn').value='';setVista('pal')}
+$('qn').addEventListener('input',()=>{if(vista!=='pal')setVista('pal')});
+let lastF=1;
+$('lu').addEventListener('change',()=>{const o=$('lu').selectedOptions[0],nf=parseFloat(o.value)||1;['bl','bw','bh'].forEach(id=>{const v=parseFloat($(id).value);if(v)$(id).value=Math.round(v*lastF/nf*10000)/10000});lastF=nf;document.querySelectorAll('[data-t]').forEach(e=>e.textContent=e.dataset.t+' ('+o.dataset.s+')');cub()});
+function costo(){
+  const C=window.CALC||{},va=C.va||0,v=n('hv'),h=$('hm').value==='pct'?Math.max(va*v/100,n('hmin')):v,hi=h*0.16,g=n('gt'),ct=C.ex?0:(C.dta+C.igi+C.iva);
+  window.COST={h,hi,g,ct,tot:h+hi+g+ct};
+  $('c0').textContent=fmt(ct,1);$('c1').textContent=fmt(h,1);$('c2').textContent=fmt(hi,1);$('c3').textContent=fmt(g,1);$('c4').textContent=fmt(h+hi+g+ct,1);
+}
+let OPS=[];try{OPS=JSON.parse(localStorage.getItem('ops_v1'))||[]}catch(e){}
+const saveOps=()=>{try{localStorage.setItem('ops_v1',JSON.stringify(OPS))}catch(e){}};
+const today=()=>new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,10);
+const tot=o=>o.dta+o.igi+o.iva,all=o=>tot(o)+(o.h||0)+(o.hi||0)+(o.g||0);
+$('rg').onclick=()=>{
+  const C=window.CALC||{},z=v=>C.ex?0:(v||0),fo=S.fc.folio||'';
+  OPS.push({id:Date.now(),fecha:today(),folio:fo,op:$('op').value==='imp'?'Importación':'Exportación',inc:$('inc').value,tr:$('tr').value,fr:$('fr').value,vf:n('vf'),tc:n('tc'),va:C.va||0,dta:z(C.dta),igi:z(C.igi),iva:z(C.iva),h:(window.COST||{}).h||0,hi:(window.COST||{}).hi||0,g:(window.COST||{}).g||0});
+  saveOps();$('rgm').textContent='Operación registrada ✓'+(fo?' con la factura '+fo+'.':'. Aún no tiene folio de factura: genera la factura comercial para ligarla.');
+};
+function filt(){const a=$('f1').value,b=$('f2').value,i=$('fi').value,t=$('ft').value;return OPS.filter(o=>(!a||o.fecha>=a)&&(!b||o.fecha<=b)&&(!i||o.inc===i)&&(!t||o.tr===t))}
+function drawChart(cv,L,light){
+  const x=cv.getContext('2d'),W=cv.width,H=cv.height,ink=light?'#111':getComputedStyle(document.documentElement).getPropertyValue('--ink').trim(),F='Archivo,system-ui,sans-serif';
+  x.clearRect(0,0,W,H);if(light){x.fillStyle='#fff';x.fillRect(0,0,W,H)}
+  const by={};L.forEach(o=>{const g=by[o.fecha]||(by[o.fecha]={d:0,g:0,v:0,h:0,x:0});g.d+=o.dta;g.g+=o.igi;g.v+=o.iva;g.h+=(o.h||0)+(o.hi||0);g.x+=o.g||0});
+  const ks=Object.keys(by).sort();x.fillStyle=ink;x.font='600 20px '+F;
+  if(!ks.length){x.textAlign='center';x.fillText('Sin datos para graficar',W/2,H/2);return}
+  const cols=['#8fb8ff','#3b78e7','#123a8f','#2bb3a3','#9aa5b5'],nm=['DTA','IGI','IVA','Honorarios','Gastos'],mx=Math.max(...ks.map(k=>by[k].d+by[k].g+by[k].v+by[k].h+by[k].x))||1;
+  const L0=100,R0=20,T0=60,B0=60,pw=W-L0-R0,ph=H-T0-B0,bw=Math.min(90,pw/ks.length*0.6);
+  nm.forEach((t,i)=>{x.fillStyle=cols[i];x.fillRect(L0+i*112,18,18,18);x.fillStyle=ink;x.textAlign='left';x.fillText(t,L0+i*112+24,34)});
+  x.font='16px '+F;x.strokeStyle='rgba(128,128,128,.4)';
+  for(let i=0;i<=4;i++){const y=T0+ph-ph*i/4;x.beginPath();x.moveTo(L0,y);x.lineTo(W-R0,y);x.stroke();x.fillStyle=ink;x.fillText(Math.round(mx*i/4).toLocaleString('es-MX'),L0-8,y+5)}
+  ks.forEach((k,i)=>{const cx=L0+pw*(i+.5)/ks.length,g=by[k];let y=T0+ph;[g.d,g.g,g.v,g.h,g.x].forEach((v,j)=>{const h=v/mx*ph;x.fillStyle=cols[j];x.fillRect(cx-bw/2,y-h,bw,h);y-=h});x.fillStyle=ink;x.textAlign='center';x.fillText(k.slice(5),cx,H-B0+24);x.fillText('$'+Math.round(g.d+g.g+g.v+g.h+g.x).toLocaleString('es-MX'),cx,y-6)});
+}
+function rep(){
+  const L=filt(),sm=L.reduce((a,o)=>({d:a.d+o.dta,g:a.g+o.igi,v:a.v+o.iva,h:a.h+(o.h||0)+(o.hi||0),x:a.x+(o.g||0)}),{d:0,g:0,v:0,h:0,x:0});
+  $('rsum').innerHTML='<h2>Resumen</h2><div><span>Operaciones</span><b>'+L.length+'</b></div><div><span>DTA</span><b>'+fmt(sm.d,1)+'</b></div><div><span>IGI</span><b>'+fmt(sm.g,1)+'</b></div><div><span>IVA</span><b>'+fmt(sm.v,1)+'</b></div><div><span>Honorarios (con IVA)</span><b>'+fmt(sm.h,1)+'</b></div><div><span>Gastos de terceros</span><b>'+fmt(sm.x,1)+'</b></div><div><span>Costo total</span><b>'+fmt(sm.d+sm.g+sm.v+sm.h+sm.x,1)+'</b></div>';
+  const box=$('rl');box.innerHTML='';
+  if(!L.length){const d=document.createElement('div');d.className='card';d.innerHTML='<small></small>';d.firstChild.textContent='No hay operaciones con estos filtros. Registra una desde la pestaña Aduana.';box.appendChild(d)}
+  L.slice().sort((a,b)=>b.id-a.id).forEach(o=>{
+    const d=document.createElement('div');d.className='card';d.innerHTML='<b></b><br><small></small><br><button class="b2">Quitar</button>';
+    d.querySelector('b').textContent=o.fecha+' · '+(o.folio||'sin folio')+' · '+o.op;
+    d.querySelector('small').textContent=o.inc+' · '+o.tr+' · Costo total '+fmt(all(o),1)+' (contribuciones '+fmt(tot(o),1)+', honorarios '+fmt((o.h||0)+(o.hi||0),1)+', gastos '+fmt(o.g||0,1)+')';
+    d.querySelector('button').onclick=()=>{OPS=OPS.filter(x=>x.id!==o.id);saveOps();rep()};box.appendChild(d)});
+  drawChart($('rc'),L,false);
+}
+['f1','f2','fi','ft'].forEach(i=>{$(i).addEventListener('input',rep);$(i).addEventListener('change',rep)});
+async function exportX(){
+  const m=$('xm'),L=filt();
+  if(!L.length){m.textContent='No hay operaciones para exportar.';return}
+  const dl=window.claude&&claude.use?await claude.use('downloads'):null;
+    if(!window.ExcelJS){m.textContent='No se pudo cargar el generador de Excel.';return}
+  try{
+    const wb=new ExcelJS.Workbook(),hd=w=>{const r=w.getRow(1);r.font={bold:true,color:{argb:'FFFFFFFF'}};r.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF1F56C4'}}},dt=k=>new Date(k+'T00:00:00Z');
+    const A=wb.addWorksheet('Operaciones',{views:[{state:'frozen',ySplit:1}]});
+    const cs=[['Fecha','fecha',12],['Folio de factura','folio',16],['Operación','op',14],['Incoterm','inc',10],['Transporte','tr',13],['Fracción arancelaria','fr',18],['Valor factura (USD)','vf',17],['Tipo de cambio','tc',14],['Valor en aduana (MXN)','va',21],['DTA (MXN)','dta',13],['IGI (MXN)','igi',13],['IVA (MXN)','iva',13],['Total contribuciones (MXN)','tt',25],['Honorarios agente (MXN)','h',22],['IVA honorarios (MXN)','hi',20],['Gastos de terceros (MXN)','g',22],['Costo total (MXN)','ct',18]];
+    A.columns=cs.map(c=>({header:c[0],key:c[1],width:c[2]}));
+    L.slice().sort((a,b)=>a.fecha<b.fecha?-1:a.fecha>b.fecha?1:a.id-b.id).forEach(o=>A.addRow({...o,fecha:dt(o.fecha),tt:tot(o),h:o.h||0,hi:o.hi||0,g:o.g||0,ct:all(o)}));
+    A.getColumn(1).numFmt='yyyy-mm-dd';for(let c=7;c<=17;c++)A.getColumn(c).numFmt='#,##0.00';
+    hd(A);A.autoFilter={from:{row:1,column:1},to:{row:L.length+1,column:cs.length}};
+    const by={};L.forEach(o=>{const g=by[o.fecha]||(by[o.fecha]={n:0,d:0,g:0,v:0,h:0,x:0});g.n++;g.d+=o.dta;g.g+=o.igi;g.v+=o.iva;g.h+=(o.h||0)+(o.hi||0);g.x+=o.g||0});
+    const B=wb.addWorksheet('Gastos por día',{views:[{state:'frozen',ySplit:1}]});
+    B.columns=[['Fecha','f',12],['Operaciones','n',13],['DTA (MXN)','d',14],['IGI (MXN)','g',14],['IVA (MXN)','v',14],['Honorarios con IVA (MXN)','h',24],['Gastos de terceros (MXN)','x',24],['Costo total (MXN)','t',18]].map(c=>({header:c[0],key:c[1],width:c[2]}));
+    const ks=Object.keys(by).sort();ks.forEach(k=>{const g=by[k];B.addRow({f:dt(k),n:g.n,d:g.d,g:g.g,v:g.v,h:g.h,x:g.x,t:g.d+g.g+g.v+g.h+g.x})});
+    B.getColumn(1).numFmt='yyyy-mm-dd';for(let c=3;c<=8;c++)B.getColumn(c).numFmt='#,##0.00';
+    hd(B);B.autoFilter={from:{row:1,column:1},to:{row:ks.length+1,column:8}};
+    const G=wb.addWorksheet('Gráfica');G.getCell('A1').value='Gastos por día (MXN)';G.getCell('A1').font={bold:true,size:14};
+    const cv=document.createElement('canvas');cv.width=900;cv.height=480;drawChart(cv,L,true);
+    G.addImage(wb.addImage({base64:cv.toDataURL('image/png'),extension:'png'}),{tl:{col:0,row:2},ext:{width:900,height:480}});
+    const buf=await wb.xlsx.writeBuffer();
+    const fn='operaciones-aduana-'+today()+'.xlsx';if(dl)await dl.save({filename:fn,data:buf});else{const k=document.createElement('a');k.href=URL.createObjectURL(new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));k.download=fn;document.body.appendChild(k);k.click();k.remove()}
+    m.textContent='Archivo listo ✓';
+  }catch(e){m.textContent=e&&e.code==='declined'?'Cancelaste la descarga.':'No se pudo exportar: '+((e&&e.message)||e)}
+}
+$('xl').onclick=exportX;
+const INFO={
+ imp:{t:'Información de importación',items:[
+  ['Quién puede importar','<p>Para importar de forma definitiva necesitas estar inscrito en el <b>Padrón de Importadores</b> del SAT, con RFC activo y e.firma vigente.</p><p>Algunos productos piden además un padrón sectorial. Tu agente aduanal lo verifica antes de empezar.</p>'],
+  ['Documentos','<ul><li>Factura comercial</li><li>Packing list</li><li>Documento de transporte (BL, guía aérea o carta porte)</li><li>Certificado de origen, si aplicas preferencia de un tratado</li><li>Permisos o constancias de NOMs, si tu mercancía los requiere</li><li>Carta de encargo para el agente aduanal</li></ul><p>El agente elabora el pedimento y transmite el COVE.</p>'],
+  ['Pasos del despacho','<ol><li>Contratas al agente aduanal y le das la carta de encargo.</li><li>Clasifican la mercancía (fracción arancelaria).</li><li>Revisan regulaciones: permisos y NOMs.</li><li>El agente elabora el pedimento y transmite la información.</li><li>Se pagan las contribuciones.</li><li>La aduana da el resultado de la selección automatizada (verde o rojo).</li><li>Si sale rojo, hay reconocimiento aduanero.</li><li>Se libera la mercancía y se entrega.</li></ol>'],
+  ['Contribuciones','<ul><li><b>IGI:</b> depende de la fracción arancelaria y del país de origen o tratado.</li><li><b>DTA:</b> derecho de trámite aduanero. La app usa 8 al millar (0.8%) como referencia.</li><li><b>IVA 16%:</b> sobre el valor en aduana más DTA e IGI.</li><li>Según la mercancía puede haber IEPS o cuotas compensatorias.</li></ul>'],
+  ['Permisos y NOMs','<p>Se consultan por fracción arancelaria. Según el producto pueden intervenir la Secretaría de Economía, COFEPRIS, SENASICA, SEMARNAT u otras dependencias.</p><p>Las NOMs de etiquetado e información comercial suelen revisarse al ingresar la mercancía.</p>'],
+  ['Incoterm y valor','<p>El Incoterm define quién paga flete y seguro. En EXW, FCA y FOB el flete y el seguro se suman al valor en aduana, como lo estima esta app. En CFR y CPT solo se suma el seguro.</p><p>Para DAP y DDP la app no suma nada, así que es solo una estimación.</p>'],
+  ['Después del despacho','<ul><li>Conserva el pedimento, la factura y los documentos de transporte.</li><li>Pide el comprobante de pago de contribuciones.</li><li>Pide la factura (CFDI) de los honorarios del agente.</li></ul>']
+ ]},
+ exp:{t:'Información de exportación',items:[
+  ['Documentos','<ul><li>Factura comercial de exportación</li><li>Packing list</li><li>Documento de transporte (BL, guía aérea o carta porte)</li><li>Certificado de origen, si el comprador lo pide para preferencia arancelaria</li><li>Permisos de salida, si tu mercancía los requiere</li></ul><p>El agente elabora el pedimento de exportación.</p>'],
+  ['Pasos del despacho','<ol><li>Acuerdas el Incoterm con el comprador.</li><li>Contratas al agente aduanal.</li><li>Clasificas la mercancía y revisas permisos de salida.</li><li>El agente elabora el pedimento de exportación.</li><li>La aduana da el resultado de la selección automatizada.</li><li>Presentas la mercancía y se embarca.</li><li>Conservas el comprobante de salida.</li></ol>'],
+  ['Contribuciones','<p>Por lo general la exportación definitiva no paga IGI y el IVA va a tasa 0%. Aun así pagas honorarios del agente y gastos de terceros. Confirma el caso de tu mercancía con tu agente.</p>'],
+  ['Permisos de salida','<p>Algunas mercancías necesitan permiso para salir del país, por ejemplo ciertos productos controlados, vida silvestre o patrimonio cultural. Se revisa por fracción arancelaria.</p>'],
+  ['Incoterm y gastos','<p>El Incoterm define hasta dónde pagas flete y seguro. En EXW el comprador asume casi todo; en FOB, CIF, DAP o DDP tú cubres más tramos del trayecto.</p>']
+ ]}
+};
+function infoRender(){
+  const I=INFO[$('op').value],box=$('info');
+  box.innerHTML='<h2>'+I.t+'</h2><div class="ib" id="ib"></div><div id="ip"></div><small>Información de referencia. Confirma los detalles con tu agente aduanal.</small>';
+  I.items.forEach(it=>{const b=document.createElement('button');b.className='row';b.textContent=it[0];b.setAttribute('aria-pressed','false');
+    b.onclick=()=>{const on=b.getAttribute('aria-pressed')==='true';[...$('ib').children].forEach(x=>x.setAttribute('aria-pressed','false'));if(on)$('ip').innerHTML='';else{b.setAttribute('aria-pressed','true');$('ip').innerHTML=it[1]}};
+    $('ib').appendChild(b)});
+}
+$('op').addEventListener('change',infoRender);infoRender();
+menu();adu();cub();
+</script>
+</body>
+</html>
